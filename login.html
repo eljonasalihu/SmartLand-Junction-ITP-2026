@@ -28,7 +28,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 /* LEFT PANEL — nature/brand */
 .left{
   width:42%;background:var(--forest);position:relative;overflow:hidden;
-  display:flex;flex-direction:column;justify-content:space-between;padding:48px;
+  display:flex;flex-direction:column;justify-content:space-between;padding:clamp(24px,4vh,48px);
 }
 .left-bg{
   position:absolute;inset:0;
@@ -42,7 +42,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
   background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a7a4c' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 .left-content{position:relative;z-index:2;}
-.brand{display:flex;align-items:center;gap:12px;margin-bottom:56px;}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:clamp(24px,4vh,56px);}
 .brand-hex{
   width:42px;height:42px;display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:12px;
@@ -58,7 +58,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 .left-sub{font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7;max-width:300px;}
 
 /* FEATURE PILLS */
-.features{display:flex;flex-direction:column;gap:10px;margin-top:40px;}
+.features{display:flex;flex-direction:column;gap:10px;margin-top:clamp(20px,4vh,40px);}
 .feat{
   display:flex;align-items:center;gap:12px;
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
@@ -171,6 +171,17 @@ input.no-icon,select.no-icon{padding-left:14px;}
 @keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .form-card{animation:fadeIn 0.4s ease;}
+
+@media (max-width: 900px){
+  .page{flex-direction:column;}
+  .left{width:100%;height:auto;}
+  .right{padding:24px;}
+}
+@media (max-height: 700px){
+  .left-headline{font-size:28px;}
+  .features{gap:8px;}
+}
+
 </style>
 </head>
 <body>
@@ -261,7 +272,7 @@ input.no-icon,select.no-icon{padding-left:14px;}
         </button>
 
         <div class="form-link">Nuk keni llogari? <a onclick="showTab('signup')">Regjistrohuni</a></div>
-        <div class="admin-link">Punonjës i Qeverisë / Komunës? <a onclick="doAdminLogin()">Hyni si Administrator →</a></div>
+        <div class="admin-link">Punonjes i Autoriteve Lokale/Institucioneve? <a onclick="doAdminLogin()">Hyni si Administrator →</a></div>
       </div>
 
       <!-- SIGNUP FORM -->
