@@ -20,10 +20,10 @@
   --shadow:rgba(45,74,46,0.08);--shadow-md:rgba(45,74,46,0.14);
   --radius:14px;--radius-sm:9px;--radius-lg:20px;
 }
-html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text);overflow:hidden;}
+html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text);overflow:auto;}
 
 /* LAYOUT */
-.page{display:flex;height:100vh;}
+.page{display:flex;min-height:100vh;}
 
 /* LEFT PANEL — nature/brand */
 .left{
@@ -180,6 +180,13 @@ input.no-icon,select.no-icon{padding-left:14px;}
 @media (max-height: 700px){
   .left-headline{font-size:28px;}
   .features{gap:8px;}
+}
+
+
+@media (max-width: 900px){
+  .page{flex-direction:column;}
+  .left{width:100%;height:auto;}
+  .right{padding:24px;overflow:visible;}
 }
 
 </style>

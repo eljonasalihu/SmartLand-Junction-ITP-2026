@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOKA — Toka Ime</title>
+<title>Toka Ime — Sistemi Shendetit te Tokes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -284,6 +284,222 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
   background:rgba(45,74,46,0.85);color:#fff;padding:8px 12px;border-radius:10px;
   font-size:11px;font-weight:600;backdrop-filter:blur(4px);
 }
+
+
+/* ADMIN-STYLE AI CHAT FOR FARMER PAGE */
+.ai-section{
+  padding:12px 0;
+}
+.chat-msgs{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  max-height:300px;
+  overflow-y:auto;
+  margin-bottom:10px;
+}
+.chat-msgs::-webkit-scrollbar{width:3px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border-mid);}
+.cmsg{
+  padding:8px 10px;
+  border-radius:8px;
+  font-size:12px;
+  line-height:1.5;
+}
+.cmsg.ai{
+  background:var(--sage-pale);
+  color:var(--text-mid);
+  border-radius:8px 8px 8px 2px;
+}
+.cmsg.user{
+  background:var(--forest);
+  color:#fff;
+  border-radius:8px 8px 2px 8px;
+  align-self:flex-end;
+}
+.chat-input-row{
+  display:flex;
+  gap:6px;
+  padding-top:0;
+  border-top:none;
+  margin-top:0;
+}
+.chat-input-row input{
+  flex:1;
+  padding:8px 10px;
+  border:1.5px solid var(--border);
+  border-radius:7px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12px;
+  color:var(--text);
+  background:var(--white);
+  outline:none;
+}
+.chat-input-row input:focus{border-color:var(--sage);}
+.chat-send{
+  width:auto;
+  height:auto;
+  padding:8px 12px;
+  background:var(--forest);
+  color:#fff;
+  border:none;
+  border-radius:7px;
+  font-size:12px;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+.chat-send:hover{background:var(--forest-mid);}
+.chat-suggestions{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+}
+.chat-suggestions button{
+  padding:4px 8px;
+  background:var(--sage-pale);
+  border:1px solid var(--border-mid);
+  border-radius:5px;
+  font-size:10px;
+  cursor:pointer;
+  color:var(--forest);
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.chat-suggestions button:hover{
+  background:var(--forest);
+  color:#fff;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Mobile bottom nav */
+.mobile-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--forest);border-top:1px solid rgba(255,255,255,0.1);
+  height:56px;
+}
+.mobile-nav-inner{
+  display:flex;height:100%;
+}
+.mnav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:transparent;border:none;cursor:pointer;
+  color:rgba(255,255,255,0.55);transition:color 0.2s;padding:4px 0;
+}
+.mnav-btn.active{color:#fff;}
+.mnav-btn .mnav-icon{font-size:18px;line-height:1;}
+.mnav-btn .mnav-label{font-size:9px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;}
+
+/* Tablet (≤1024px): hide right panel by default, narrower sidebar */
+@media (max-width:1024px){
+  .sidebar{width:260px;}
+  .right-panel{width:320px;}
+}
+
+/* Small tablet / large phone landscape (≤768px): two-pane with bottom sheet */
+@media (max-width:768px){
+  :root{--nav-h:52px;}
+  html,body{overflow:hidden;}
+
+  /* Compact nav */
+  .nav{padding:0 14px;}
+  .nav-tag{display:none;}
+  .nav-center{display:none;}
+  .nav-uname{display:none;}
+  .pulse-txt{display:none;}
+  .pulse-badge{padding:4px 8px;}
+
+  /* App fills screen, bottom nav takes 56px */
+  .app{
+    flex-direction:column;
+    height:calc(100vh - var(--nav-h));
+    padding-top:0;
+    margin-top:var(--nav-h);
+  }
+
+  /* Each panel is a full-screen "view", toggled via JS */
+  .sidebar{
+    width:100%;border-right:none;border-bottom:1px solid var(--border);
+    position:fixed;top:var(--nav-h);left:0;right:0;bottom:56px;
+    z-index:90;
+    transition:transform 0.3s ease;
+    transform:translateX(-100%);
+  }
+  .sidebar.mobile-visible{transform:translateX(0);}
+
+  .map-container{
+    position:fixed;top:var(--nav-h);left:0;right:0;bottom:56px;
+    z-index:80;
+    transition:opacity 0.2s;
+  }
+  .map-container.mobile-hidden{opacity:0;pointer-events:none;}
+
+  .right-panel{
+    width:100%;border-left:none;
+    position:fixed;top:var(--nav-h);left:0;right:0;bottom:56px;
+    z-index:90;
+    transition:transform 0.3s ease;
+    transform:translateX(100%);
+  }
+  .right-panel.mobile-visible{transform:translateX(0);}
+
+  /* Show mobile nav */
+  .mobile-nav{display:block;}
+
+  /* Blur hint above bottom nav */
+  .blur-hint{bottom:66px;}
+  .map-legend{bottom:66px;}
+
+  /* Panel content padding */
+  .panel-content{padding:12px;}
+  .detail-hero{padding:14px;}
+  .detail-meta{grid-template-columns:1fr 1fr;}
+}
+
+/* Small phones (≤480px) */
+@media (max-width:480px){
+  :root{--nav-h:48px;}
+  .nav-name{font-size:16px;}
+  .nav-hex{width:30px;height:30px;font-size:14px;}
+
+  .panel-tabs .ptab{font-size:10px;padding:8px 4px;}
+
+  .detail-meta{grid-template-columns:1fr 1fr;}
+  .sat-grid{grid-template-columns:1fr 1fr;}
+
+  .economic-row{flex-wrap:wrap;}
+  .econ-chip{min-width:calc(50% - 4px);}
+
+  .score-bar-label{width:100px;font-size:10px;}
+
+  .action-btn{padding:10px 12px;}
+  .action-title{font-size:12px;}
+  .action-desc{font-size:10px;}
+
+  .parcel-stats{flex-wrap:wrap;gap:4px;}
+
+  /* Make chain hash shorter */
+  .chain-hash{display:none;}
+}
+
+/* Active tab indicator on mobile nav — pulse badge */
+.mnav-badge{
+  width:6px;height:6px;border-radius:50%;background:#4ade80;
+  position:absolute;top:6px;right:calc(50% - 14px);
+}
+
+.logo-wrap{
+  overflow:hidden;
+  padding:0;
+}
+
+.logo-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:9px;
+}
 </style>
 </head>
 <body>
@@ -291,16 +507,12 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-brand">
-    <div class="nav-hex">🌿</div>
-    <div>
-      <div class="nav-name">TOKA</div>
+<div class="nav-hex logo-wrap">
+  <img src="logo.png" alt="TOKA Logo">
+</div>    <div>
+      <div class="nav-name">Toka ime</div>
       <div class="nav-tag">Sistemi i Shëndetit të Tokës</div>
     </div>
-  </div>
-  <div class="nav-center">
-    <button class="nav-tab active" onclick="switchView('map')">🗺️ Harta</button>
-    <button class="nav-tab" onclick="switchView('dashboard')">📊 Pasqyra</button>
-    <button class="nav-tab" onclick="switchView('blockchain')">⛓️ Regjistri</button>
   </div>
   <div class="nav-right">
     <div class="pulse-badge">
@@ -349,7 +561,7 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
     <div class="panel-tabs">
       <div class="ptab active" onclick="switchTab('detail')" id="tab-detail">📋 Detajet</div>
       <div class="ptab" onclick="switchTab('satellite')" id="tab-satellite">🛰️ Satelit</div>
-      <div class="ptab" onclick="switchTab('chain')" id="tab-chain">⛓️ Bllokchain</div>
+      <div class="ptab" onclick="switchTab('chain')" id="tab-chain">⛓️ Histori</div>
       <div class="ptab" onclick="switchTab('ai')" id="tab-ai">🤖 Këshilltar</div>
     </div>
     <div class="panel-content" id="panel-content">
@@ -363,6 +575,24 @@ html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif;background:var(
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mnav-btn" id="mnav-list" onclick="mobileView('list')">
+      <span class="mnav-icon">🗂️</span>
+      <span class="mnav-label">Parcelet</span>
+    </button>
+    <button class="mnav-btn active" id="mnav-map" onclick="mobileView('map')">
+      <span class="mnav-icon">🗺️</span>
+      <span class="mnav-label">Harta</span>
+    </button>
+    <button class="mnav-btn" id="mnav-detail" onclick="mobileView('detail')">
+      <span class="mnav-icon">📋</span>
+      <span class="mnav-label">Detajet</span>
+    </button>
+  </div>
+</nav>
 
 <script>
 // ===== DATA =====
@@ -400,7 +630,7 @@ const PARCELS = [
     ],
     satellite:{reported:'Livadh i kositur',detected:'Bimësi e pakët, thatësi e mundshme',confidence:62,ndviOwn:0.32,ndviAvg:0.58},
     timeline:[60,58,55,52,50,48,45,42,45,47,44,40,38,42,45,43,40,42,45,44,43,45,46,45],
-    lat:42.235, lng:20.758,
+    lat:42.242, lng:20.772,
   },
   {
     id:'PZ-2203-C',name:'Kopshti Familjar',location:'Prizren, Qendër',
@@ -418,7 +648,7 @@ const PARCELS = [
     ],
     satellite:{reported:'Kopsht aktiv me perime',detected:'Bimësi e dendur, aktivitet i lartë',confidence:94,ndviOwn:0.82,ndviAvg:0.79},
     timeline:[80,83,85,87,86,88,90,89,88,91,90,89,87,88,90,91,92,91,90,91,92,91,91,91],
-    lat:42.218, lng:20.745,
+    lat:42.224, lng:20.758,
   },
   {
     id:'PZ-2204-D',name:'Fusha e Jugut',location:'Prizren, Dragash',
@@ -434,7 +664,7 @@ const PARCELS = [
     ],
     satellite:{reported:'Tokë bujqësore aktive',detected:'Tokë e lënë djerrë, bimësi e egër',confidence:79,ndviOwn:0.18,ndviAvg:0.62},
     timeline:[65,60,55,50,45,40,38,35,30,32,28,25,28,30,28,25,30,32,30,28,32,31,32,32],
-    lat:42.198, lng:20.728,
+    lat:42.191, lng:20.716,
   },
   {
     id:'PZ-2205-E',name:'Toka e Re',location:'Prizren, Veriu',
@@ -450,11 +680,20 @@ const PARCELS = [
     ],
     satellite:{reported:'Pemëtari aktive',detected:'Mbulim i mesëm bimësor, stres i lehtë',confidence:74,ndviOwn:0.51,ndviAvg:0.58},
     timeline:[55,58,60,62,58,55,60,63,62,60,63,62,60,61,63,62,63,62,63,63,62,63,63,63],
-    lat:42.225, lng:20.752,
+    lat:42.233, lng:20.731,
   }
 ];
 
 let activeParcel = null;
+
+function getHealthColor(pulse){
+  if(pulse >= 75) return '#22c55e';
+  if(pulse >= 45) return '#eab308';
+  return '#ef4444';
+}
+
+const parcelLayers = [];
+
 let activeTab = 'detail';
 let map = null;
 let layers = {};
@@ -493,7 +732,13 @@ function renderParcelList(){
 function initMap(){
   map = L.map('map', {zoomControl:false, attributionControl:false}).setView([42.215, 20.745], 13);
   
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+  L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  {
+    attribution: 'Tiles © Esri',
+    maxZoom: 19
+  }
+).addTo(map);
   
   // Add a blur/grey overlay for the whole area first
   // Draw 50+ simulated nearby parcels (blurred/greyed)
@@ -512,7 +757,7 @@ function initMap(){
   // Draw own parcels
   PARCELS.forEach((p,i) => {
     const color = p.pulse>=70?'#22c55e':p.pulse>=40?'#f59e0b':'#ef4444';
-    const poly = generateParcelShape(p.lat, p.lng, 0.006 + p.area*0.002);
+    const poly = generateParcelShape(p.lat, p.lng, 0.0035 + p.area*0.0012);
     const layer = L.polygon(poly, {
       fillColor:color,fillOpacity:0.55,
       color:color,weight:2.5,opacity:0.9,
@@ -634,16 +879,15 @@ function renderDetail(p){
     <div class="ai-text">"${p.aiExplain}"</div>
   </div>
 
-  ${p.pulse<40 || p.abandon>40 ? `
   <div class="abandon-card">
-    <div class="abandon-header"><div class="abandon-icon">⚠️</div><div class="abandon-title">Rrezik Braktisje</div></div>
-    <div class="abandon-prob">${p.abandon}%</div>
-    <div class="abandon-label">Probabiliteti i braktisjes</div>
+    <div class="abandon-header"><div class="abandon-icon">💶</div><div class="abandon-title">Rrezik Ekonomik</div></div>
+    <div class="abandon-prob">€${Math.round(p.area*1200*(100-p.pulse)/100).toLocaleString()}</div>
+    <div class="abandon-label">Humbje e mundshme ekonomike / vit</div>
     <div class="economic-row">
-      <div class="econ-chip"><div class="econ-val">€${Math.round(p.area*1200*p.abandon/100).toLocaleString()}</div><div class="econ-label">Humbje potenciale/vit</div></div>
-      <div class="econ-chip"><div class="econ-val">€${Math.round(p.area*1200).toLocaleString()}</div><div class="econ-label">Vlera e plotë vjetore</div></div>
+      <div class="econ-chip"><div class="econ-val">${Math.round((100-p.pulse)*0.8)}%</div><div class="econ-label">Rreziku ekonomik</div></div>
+      <div class="econ-chip"><div class="econ-val">€${Math.round(p.area*1200).toLocaleString()}</div><div class="econ-label">Potenciali vjetor</div></div>
     </div>
-  </div>` : ''}
+  </div>
 
   <div class="section-label">Ndarja e Pulse Score (40/30/20/10)</div>
   <div class="score-bars">
@@ -677,9 +921,9 @@ function renderDetail(p){
 
   <div class="section-label" style="margin-top:6px">Veprimet</div>
   <div class="actions-grid">
-    <button class="action-btn" onclick="sendSMS()">
+    <button class="action-btn" onclick="requestSubsidyStatus()">
       <div class="action-icon" style="background:#dcfce7">💬</div>
-      <div class="action-body"><div class="action-title">Dërgo SMS Këshillues</div><div class="action-desc">Mesazh në shqip me hapat e tjerë</div></div>
+      <div class="action-body"><div class="action-title">Shiko Statusin eKosova</div><div class="action-desc">Shiko statusin e subvencioneve</div></div>
       <div class="action-arrow">→</div>
     </button>
     <button class="action-btn" onclick="contactOffice()">
@@ -805,96 +1049,161 @@ function renderChain(p){
 }
 
 function renderAI(p){
+  const status = p.pulse>=70?'në gjendje të mirë':p.pulse>=40?'nën stres':'në rrezik';
   return `
-  <div class="chat-wrap" id="chat-wrap">
-    <div style="background:var(--sage-pale);border-radius:11px;padding:11px 13px;margin-bottom:12px;border:1px solid var(--border-mid);">
-      <div style="font-size:11px;font-weight:700;color:var(--sage);margin-bottom:3px;">🤖 Këshilltar Bujqësor AI — Shqip</div>
-      <div style="font-size:11px;color:var(--text-mid);line-height:1.5;">I trajnuar me të dhënat e ${p.name} dhe modelet sezonale të Kosovës. Pyesni çfarë të doni!</div>
-    </div>
-    <div class="chat-messages" id="chat-msgs"></div>
-    <div class="chat-input-row">
-      <textarea class="chat-input" id="chat-in" rows="2" placeholder="Shkruani pyetjen tuaj në shqip..."></textarea>
-      <button class="chat-send" onclick="sendChat()">↑</button>
-    </div>
-  </div>`;
+    <div class="ai-section">
+      <div class="section-label">🤖 Këshilltar AI Bujqësor — Shqip</div>
+
+      <div class="chat-msgs" id="chat-msgs">
+        <div class="cmsg ai">
+          Mirëdita! Jam këshilltari juaj AI për parcelën <strong>${p.name}</strong>.
+          Land Pulse aktual është <strong>${p.pulse}/100</strong> dhe parcela është <strong>${status}</strong>.
+          Si mund t'ju ndihmoj sot?
+        </div>
+      </div>
+
+      <div class="chat-input-row">
+        <input
+          type="text"
+          id="chat-input"
+          placeholder="Pyesni diçka për parcelën tuaj…"
+          onkeydown="if(event.key==='Enter')sendChat()"
+        >
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+
+      <div class="chat-suggestions">
+        <button onclick="setChat('Çfarë duhet të mbjell këtë sezon?')">🌱 Mbjellja</button>
+        <button onclick="setChat('Si ta rris Land Pulse tim?')">💓 Land Pulse</button>
+        <button onclick="setChat('A kam rrezik për braktisje?')">⚠️ Rreziku</button>
+        <button onclick="setChat('Çfarë veprimi duhet të bëj tani?')">✅ Hapi tjetër</button>
+      </div>
+    </div>`;
 }
 
-function initChat(p){
-  setTimeout(()=>{
-    const msgs = document.getElementById('chat-msgs');
-    if(!msgs) return;
-    const greet = `Mirëdita! Jam këshilltari juaj bujqësor AI për parcelën "${p.name}". 
-    
-Bazuar në të dhënat e fundit, parcela ka një Land Pulse Score prej ${p.pulse}/100 dhe gjendet ${p.pulse>=70?'në gjendje të mirë':'nën stres'}. 
-
-Mund t'ju ndihmoj me: pyetje bujqësore, planifikimin e korrjes, trajtimin e tokës, apo çdo gjë tjetër. Si mund t'ju ndihmoj sot?`;
-    
-    addMsg('ai', greet);
-    
-    chatHistory = [{role:'user',content:`Konteksti: Unë jam fermeri i parcelës "${p.name}" (${p.area} ha, ${p.crop}). Land Pulse: ${p.pulse}. Braktisja: ${p.abandon}%. Aktiviteti i fundit: ${p.lastActivity}. AI thotë: "${p.aiExplain}". Gjithmonë përgjigju në shqip, me tone miqësore dhe këshilla praktike.`},{role:'assistant',content:greet}];
-    
-    document.getElementById('chat-in').addEventListener('keydown', e=>{
-      if(e.key==='Enter' && !e.shiftKey){e.preventDefault();sendChat();}
-    });
-  },100);
+function setChat(msg){
+  const input = document.getElementById('chat-input');
+  if(!input) return;
+  input.value = msg;
+  sendChat();
 }
 
-function addMsg(role, text){
+function sendChat(){
+  const input = document.getElementById('chat-input');
   const msgs = document.getElementById('chat-msgs');
-  if(!msgs) return;
-  const el = document.createElement('div');
-  el.className = `msg ${role}`;
-  el.innerHTML = `
-    <div class="msg-avatar ${role==='ai'?'msg-ai-av':'msg-user-av'}">${role==='ai'?'AI':'AB'}</div>
-    <div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`;
-  msgs.appendChild(el);
+  if(!input || !msgs || activeParcel===null) return;
+
+  const q = input.value.trim();
+  if(!q) return;
+
+  input.value = '';
+
+  const userMsg = document.createElement('div');
+  userMsg.className = 'cmsg user';
+  userMsg.textContent = q;
+  msgs.appendChild(userMsg);
+
+  const p = PARCELS[activeParcel];
+  const aiMsg = document.createElement('div');
+  aiMsg.className = 'cmsg ai';
+
+  const lower = q.toLowerCase();
+  let answer = '';
+
+  if(lower.includes('mbjell') || lower.includes('sezon')){
+    answer = `Për parcelën ${p.name}, kontrollo lagështinë, aktivitetin e fundit dhe kulturën aktuale (${p.crop}) para mbjelljes. Me Land Pulse ${p.pulse}/100, hapi më i mirë është të vazhdosh me veprimet sezonale dhe të regjistrosh çdo aktivitet në sistem.`;
+  } else if(lower.includes('pulse')){
+    answer = `Për ta rritur Land Pulse, regjistro aktivitetet bujqësore me kohë, shmang periudha të gjata pa mirëmbajtje, bëj ujitje/kositje sipas sezonit dhe ndiq rekomandimin: ${p.nextAction}.`;
+  } else if(lower.includes('rrezik') || lower.includes('braktis')){
+    answer = `Rreziku aktual i braktisjes për ${p.name} është ${p.abandon}%. ${p.abandon>50?'Kjo kërkon ndërhyrje urgjente dhe kontakt me zyrën komunale.':p.abandon>25?'Ka shenja stresi, prandaj mirëmbajtja sezonale duhet bërë sa më shpejt.':'Rreziku është i ulët, por vazhdo me mirëmbajtje të rregullt.'}`;
+  } else if(lower.includes('veprim') || lower.includes('tani') || lower.includes('hapi')){
+    answer = `Hapi i rekomanduar tani për ${p.name} është: ${p.nextAction}. Aktiviteti i fundit ishte më ${p.lastActivity}, prandaj mbaje parcelën aktive duke regjistruar punimet e radhës.`;
+  } else {
+    answer = `Bazuar në të dhënat e parcelës ${p.name}: Land Pulse ${p.pulse}/100, kultura ${p.crop}, sipërfaqja ${p.area} ha dhe rreziku i braktisjes ${p.abandon}%. Rekomandimi kryesor i AI është: ${p.aiExplain}`;
+  }
+
+  setTimeout(() => {
+    aiMsg.innerHTML = answer;
+    msgs.appendChild(aiMsg);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 350);
+
   msgs.scrollTop = msgs.scrollHeight;
 }
 
-async function sendChat(){
-  const inp = document.getElementById('chat-in');
-  const text = inp.value.trim();
-  if(!text) return;
-  inp.value = '';
-  addMsg('user', text);
-  chatHistory.push({role:'user',content:text});
-  
-  const typing = document.createElement('div');
-  typing.className='msg ai';typing.id='typing';
-  typing.innerHTML=`<div class="msg-avatar msg-ai-av">AI</div><div class="msg-bubble" style="color:var(--stone-light)">Duke shkruar…</div>`;
-  document.getElementById('chat-msgs').appendChild(typing);
-  document.getElementById('chat-msgs').scrollTop=9999;
-  
-  try{
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:`Ti je këshilltar bujqësor ekspert i TOKA – sistemit të shëndetit të tokës në Kosovë. Përgjigju GJITHMONË në gjuhën shqipe. Ji miqësor, praktik, dhe specifik për kontekstin bujqësor të Kosovës. Jepi këshilla konkrete dhe të zbatueshme. Mbaj përgjigjet nën 150 fjalë.`,
-        messages:chatHistory.slice(-8)
-      })
-    });
-    const data = await res.json();
-    document.getElementById('typing')?.remove();
-    const reply = data.content?.[0]?.text || 'Më falni, pati një problem. Provoni përsëri.';
-    addMsg('ai', reply);
-    chatHistory.push({role:'assistant',content:reply});
-  } catch(e){
-    document.getElementById('typing')?.remove();
-    addMsg('ai','Ju kërkoj ndjesë, po has vështirësi teknike. Provoni përsëri pas pak.');
-  }
-}
 
 function switchView(v){
   document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',['map','dashboard','blockchain'][i]===v));
 }
 
-function sendSMS(){
-  const p = activeParcel!==null?PARCELS[activeParcel]:null;
-  if(!p)return;
-  showToast(`📱 SMS u dërgua: "TOKA: Parcela ${p.name} — ${p.nextAction}"`);
+// ===== MOBILE VIEW SWITCHING =====
+let currentMobileView = 'map';
+
+function mobileView(view){
+  if(window.innerWidth > 768) return;
+  currentMobileView = view;
+
+  const sidebar = document.querySelector('.sidebar');
+  const mapEl   = document.querySelector('.map-container');
+  const panel   = document.querySelector('.right-panel');
+
+  // Reset all
+  sidebar.classList.remove('mobile-visible');
+  mapEl.classList.remove('mobile-hidden');
+  panel.classList.remove('mobile-visible');
+
+  if(view === 'list'){
+    sidebar.classList.add('mobile-visible');
+    mapEl.classList.add('mobile-hidden');
+  } else if(view === 'map'){
+    // map already visible
+    // invalidate map size so tiles render correctly
+    setTimeout(()=>{ if(map) map.invalidateSize(); }, 50);
+  } else if(view === 'detail'){
+    panel.classList.add('mobile-visible');
+    mapEl.classList.add('mobile-hidden');
+  }
+
+  // Update bottom nav active state
+  document.querySelectorAll('.mnav-btn').forEach(b => b.classList.remove('active'));
+  const btnMap = {list:'mnav-list', map:'mnav-map', detail:'mnav-detail'};
+  document.getElementById(btnMap[view])?.classList.add('active');
+}
+
+// When a parcel is selected on mobile, auto-navigate to detail view
+const _origSelectParcel = typeof selectParcel === 'function' ? selectParcel : null;
+function selectParcelMobileWrapper(i){
+  if(_origSelectParcel) _origSelectParcel(i);
+  if(window.innerWidth <= 768){
+    setTimeout(()=>mobileView('detail'), 100);
+  }
+}
+
+// Override parcel-item clicks to use wrapper on mobile
+document.addEventListener('click', function(e){
+  const item = e.target.closest('.parcel-item');
+  if(item && window.innerWidth <= 768){
+    const idx = parseInt(item.id.replace('pitem-',''));
+    if(!isNaN(idx)){
+      selectParcel(idx);
+      setTimeout(()=>mobileView('detail'), 100);
+    }
+  }
+});
+
+// On resize, reset mobile classes if back to desktop
+window.addEventListener('resize', ()=>{
+  if(window.innerWidth > 768){
+    document.querySelector('.sidebar').classList.remove('mobile-visible');
+    document.querySelector('.map-container').classList.remove('mobile-hidden');
+    document.querySelector('.right-panel').classList.remove('mobile-visible');
+    setTimeout(()=>{ if(map) map.invalidateSize(); }, 50);
+  }
+});
+
+function requestSubsidyStatus(){
+  window.open('https://ekosova.rks-gov.net/', '_blank');
+  showToast('📄 Shërbimi i subvencioneve u hap në e-Kosova.');
 }
 
 function contactOffice(){ showToast('🏛️ Kërkesa u dërgua në Zyrën Komunale të Prizrenit.'); }
